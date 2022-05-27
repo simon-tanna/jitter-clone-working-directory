@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import LoginForm from "./LoginForm";
 import MessageForm from "./MessageForm";
 import Messages from "./Messages";
@@ -13,13 +13,25 @@ import {
 } from "react-router-dom";
 import About from "./About";
 import Notfound from "./NotFound";
+import { reducer } from "../utils/reducer";
 
 const App = () => {
+	// useReducer handles all the states in the same object
+	const initialState = {
+		messageList: [],
+	};
+	// useReducer is a function with 2 arguments.
+	// reducer: is the function that is executed when...
+	// and state
+	// it returns an array with 2 elements:
+	// store: refers to the values of the state that we are storing
+	//and dispatch: is the function that triggers the reducer function, dispatch's argument is action
 
-	
+	const [store, dispatch] = useReducer(reducer, initialState);
+	const {messageList} = store
 
 	const [loggedInUser, setLoggedInUser] = useState("");
-	const [messageList, setMessageList] = useState([]);
+	// const [messageList, setMessageList] = useState([]);
 
 	const activateUser = (username) => {
 		setLoggedInUser(username);
@@ -30,8 +42,12 @@ const App = () => {
 			text: text,
 			user: loggedInUser,
 			id: messageList[0].id + 1, //nextId(messageList)
-		};
-		setMessageList((messageList) => [message, ...messageList]);
+		};	
+		// setMessageList((messageList) => [message, ...messageList]);
+		dispatch({
+			type: "setMessageList",
+			data: [message, ...messageList]
+		})
 	};
 	// thanks Lance
 	// function nextId(data) {
@@ -47,7 +63,12 @@ const App = () => {
 
 	useEffect(() => {
 		//fetch
-		setMessageList(initialMessageList);
+		// setMessageList populates the initial message list
+		// setMessageList(initialMessageList);
+		dispatch({
+			type: "setMessageList",
+			data: initialMessageList,
+		});
 	}, []);
 
 	return (

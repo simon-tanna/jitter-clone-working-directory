@@ -8,9 +8,25 @@
 // recieves the current state
 // recieves the action we want to implement to the state
 // based in action, the function will update the state one way or another
-// action is an object with 3 keys, type and data.
+// action is an object with 2 keys, type and data.
+// type key determines what the action is that we are taking
+// data key contains the data necessary to update the state
+
+// the function returns the updated state
 
 export const reducer = (state, action) => {
 	console.log(state);
 	console.log(action);
+
+	switch (action.type) {
+		case "setMessageList": {
+			// populate the message list array with the initial values
+			return {
+				...state,
+				messageList: action.data,
+			};
+		}
+		default:
+			return state;
+	}
 };
